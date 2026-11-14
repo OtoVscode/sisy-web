@@ -72,7 +72,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Estilos compilados (Tailwind CLI + CSS propio). Recompilar: ver tailwind/README.md -->
-  <link rel="stylesheet" href="./assets/styles.css?v=6" />
+  <link rel="stylesheet" href="./assets/styles.css?v=7" />
 </head>
 <body class="font-sans">
 
@@ -104,8 +104,8 @@
   </script>
 
   <!-- ===================== NAVBAR FLOTANTE ===================== -->
-  <header class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl">
-    <nav id="navbar" class="glass-nav rounded-full flex items-center justify-between pl-6 pr-2 py-2" aria-label="Navegación principal">
+  <header class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-5xl pointer-events-none">
+    <nav id="navbar" class="pointer-events-auto glass-nav rounded-full flex items-center justify-between pl-6 pr-2 py-2" aria-label="Navegación principal">
       <a href="#inicio" class="inline-flex items-center min-h-[44px] font-serif text-lg md:text-xl tracking-[0.28em] text-cream whitespace-nowrap">
         STUDIO <span class="italic text-champagne tracking-[0.12em]">Glow</span>
       </a>
@@ -128,7 +128,7 @@
       </div>
     </nav>
 
-    <div id="mobileMenu" class="closed lg:hidden glass-nav mt-2 rounded-3xl p-6">
+    <div id="mobileMenu" class="closed pointer-events-auto lg:hidden glass-nav mt-2 rounded-3xl p-6">
       <ul class="flex flex-col gap-1 font-serif text-2xl text-cream">
         <li><a href="#maquillaje" class="mobile-link block py-2" data-i18n="nav.makeup">Maquillaje &amp; Hair</a></li>
         <li><a href="#lashes" class="mobile-link block py-2">Lashes</a></li>
