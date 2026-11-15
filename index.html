@@ -72,7 +72,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Estilos compilados (Tailwind CLI + CSS propio). Recompilar: ver tailwind/README.md -->
-  <link rel="stylesheet" href="./assets/styles.css?v=10" />
+  <link rel="stylesheet" href="./assets/styles.css?v=11" />
 </head>
 <body class="font-sans">
 
@@ -146,10 +146,17 @@
     <section id="inicio" class="hero-track relative" style="height: 250vh;">
       <div class="sticky top-0 h-screen overflow-hidden grain bg-noir">
 
+        <!-- Fondo con vida: luces doradas y polvo de brillo -->
+        <div class="hero-ambient" aria-hidden="true">
+          <div class="hero-orb hero-orb--a"></div>
+          <div class="hero-orb hero-orb--b"></div>
+          <div class="hero-orb hero-orb--c"></div>
+          <div class="hero-dust"></div>
+        </div>
+
         <!-- Video -->
         <div class="absolute inset-0 flex items-center justify-center z-10">
-          <div id="videoFrame" class="video-frame relative w-full h-full">
-            <div class="mirror-clip absolute inset-0 overflow-hidden bg-noir">
+          <div id="videoFrame" class="video-frame relative w-full h-full overflow-hidden bg-noir">
             <!-- Capa de respaldo: Ken Burns + shimmer dorado -->
             <div id="heroFallback" class="hero-fallback absolute inset-0 overflow-hidden" aria-hidden="true">
               <img class="kenburns-img absolute inset-0 w-full h-full object-cover" src="./assets/hero-fallback.jpg?v=2" alt="" fetchpriority="high" />
@@ -169,8 +176,6 @@
               <source src="./hero-beauty.mp4" type="video/mp4" />
             </video>
             <div id="heroMask" class="hero-mask absolute inset-0"></div>
-            </div>
-            <div id="mirrorRing" class="mirror-ring" aria-hidden="true"></div>
           </div>
         </div>
 
@@ -1276,13 +1281,12 @@
       heroTimeline
         .to('#titleTop', { yPercent: -18, duration: 0.5 }, 0)
         .to('#titleBottom', { yPercent: 18, duration: 0.5 }, 0)
-        .to('#videoFrame', { scale: 0.98, duration: 0.5 }, 0)
+        .to('#videoFrame', { scale: 0.72, duration: 0.5 }, 0)
         .to('#scrollHint', { opacity: 0, duration: 0.2 }, 0.1)
 
       // 50% → 100%: el video se expande a pantalla completa
-        .to('#videoFrame', { scale: 1, '--ix': '0%', '--iy': '0%', duration: 0.5, ease: 'power2.inOut' }, 0.5)
-        .to('#videoFrame', { '--rad': '0px', duration: 0.25, ease: 'power2.in' }, 0.72)
-        .to('#mirrorRing', { opacity: 0, duration: 0.3 }, 0.55)
+        .to('#videoFrame', { scale: 1, borderRadius: '0rem', duration: 0.5 }, 0.5)
+        .to('#videoFrame', { boxShadow: '0 0 0 0px rgba(198, 168, 124, 0), 0 0 0 0px rgba(198, 168, 124, 0), 0 0px 0px 0px rgba(0, 0, 0, 0)', duration: 0.4 }, 0.55)
         .to('#titleBlock', { opacity: 0, filter: 'blur(8px)', duration: 0.2 }, 0.5)
         .to('#titleTop', { yPercent: -60, duration: 0.3 }, 0.5)
         .to('#titleBottom', { yPercent: 60, duration: 0.3 }, 0.5)

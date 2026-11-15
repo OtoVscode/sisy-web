@@ -50,35 +50,11 @@ body {
 .btn-gold:active { transform: translateY(0) scale(0.98); }
 
 .video-frame {
-  /* Ventana en arco: --ix margen lateral, --iy margen arriba/abajo, --rad curva superior (GSAP lo abre a pantalla completa) */
-  --ix: 31%;
-  --iy: 4%;
-  --rad: 999px;
-  transform: scale(0.94);
-  will-change: transform;
-}
-@media (max-width: 767px) {
-  .video-frame { --ix: 13%; --iy: 11%; }
-}
-.mirror-clip {
-  clip-path: inset(var(--iy) var(--ix) var(--iy) var(--ix) round var(--rad) var(--rad) 0 0);
-}
-/* Marco del arco: filete dorado, paspartú oscuro, segundo filete y halo */
-.mirror-ring {
-  position: absolute;
-  top: var(--iy);
-  bottom: var(--iy);
-  left: var(--ix);
-  right: var(--ix);
-  border-radius: var(--rad) var(--rad) 0 0;
-  pointer-events: none;
-  box-shadow:
-    0 0 0 3px rgba(198, 168, 124, 0.95),
-    0 0 0 15px #1B1815,
-    0 0 0 16px rgba(198, 168, 124, 0.5),
-    0 0 90px 14px rgba(198, 168, 124, 0.2),
-    0 50px 100px -20px rgba(0, 0, 0, 0.85),
-    inset 0 0 60px rgba(18, 16, 14, 0.55);
+  transform: scale(0.65);
+  border-radius: 2rem;
+  /* Marco dorado y sombra: el video se lee como una pieza enmarcada antes del scroll */
+  box-shadow: 0 0 0 2px rgba(198, 168, 124, 0.55), 0 0 0 10px rgba(198, 168, 124, 0.08), 0 40px 90px -25px rgba(0, 0, 0, 0.75);
+  will-change: transform, border-radius;
 }
 
 /* Respaldo del Hero: Ken Burns + shimmer dorado */
@@ -165,6 +141,20 @@ body {
 #mobileMenu.closed { opacity: 0; transform: translateY(-12px); pointer-events: none; }
 
 @media (prefers-reduced-motion: reduce) {
-  .video-frame { transform: scale(1); --ix: 0%; --iy: 0%; --rad: 0px; }
-  .mirror-ring { display: none; }
+  .video-frame { transform: scale(1); border-radius: 0; }
+}
+
+/* Hero: fondo con vida (luces doradas que respiran y polvo de brillo) */
+.hero-ambient { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.hero-orb { position: absolute; border-radius: 9999px; filter: blur(70px); will-change: transform, opacity; }
+.hero-orb--a { width: 55vmax; height: 55vmax; left: -18vmax; top: -16vmax; background: radial-gradient(circle, rgba(198,168,124,0.32), transparent 65%); animation: orb-drift-a 16s ease-in-out infinite alternate; }
+.hero-orb--b { width: 50vmax; height: 50vmax; right: -16vmax; bottom: -18vmax; background: radial-gradient(circle, rgba(168,139,95,0.28), transparent 65%); animation: orb-drift-b 19s ease-in-out infinite alternate; }
+.hero-orb--c { width: 30vmax; height: 30vmax; left: 50%; top: 50%; margin: -15vmax 0 0 -15vmax; background: radial-gradient(circle, rgba(232,165,152,0.14), transparent 65%); animation: orb-pulse 9s ease-in-out infinite; }
+.hero-dust { position: absolute; inset: -50%; background-image: radial-gradient(rgba(249,246,240,0.4) 1px, transparent 1.5px); background-size: 120px 120px; opacity: 0.2; animation: dust-rise 60s linear infinite; }
+@keyframes orb-drift-a { to { transform: translate(14vmax, 10vmax) scale(1.15); } }
+@keyframes orb-drift-b { to { transform: translate(-12vmax, -9vmax) scale(1.1); } }
+@keyframes orb-pulse { 0%, 100% { opacity: 0.6; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
+@keyframes dust-rise { to { transform: translateY(-120px); } }
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb, .hero-dust { animation: none; }
 }
