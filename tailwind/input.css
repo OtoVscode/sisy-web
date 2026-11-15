@@ -147,9 +147,9 @@ body {
 /* Hero: fondo con vida (luces doradas que respiran y polvo de brillo) */
 .hero-ambient { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
 .hero-orb { position: absolute; border-radius: 9999px; filter: blur(70px); will-change: transform, opacity; }
-.hero-orb--a { width: 55vmax; height: 55vmax; left: -18vmax; top: -16vmax; background: radial-gradient(circle, rgba(198,168,124,0.32), transparent 65%); animation: orb-drift-a 16s ease-in-out infinite alternate; }
-.hero-orb--b { width: 50vmax; height: 50vmax; right: -16vmax; bottom: -18vmax; background: radial-gradient(circle, rgba(168,139,95,0.28), transparent 65%); animation: orb-drift-b 19s ease-in-out infinite alternate; }
-.hero-orb--c { width: 30vmax; height: 30vmax; left: 50%; top: 50%; margin: -15vmax 0 0 -15vmax; background: radial-gradient(circle, rgba(232,165,152,0.14), transparent 65%); animation: orb-pulse 9s ease-in-out infinite; }
+.hero-orb--a { width: 55vmax; height: 55vmax; left: -18vmax; top: -16vmax; background: radial-gradient(circle, rgba(198,168,124,0.42), transparent 65%); animation: orb-drift-a 16s ease-in-out infinite alternate; }
+.hero-orb--b { width: 50vmax; height: 50vmax; right: -16vmax; bottom: -18vmax; background: radial-gradient(circle, rgba(168,139,95,0.37), transparent 65%); animation: orb-drift-b 19s ease-in-out infinite alternate; }
+.hero-orb--c { width: 30vmax; height: 30vmax; left: 50%; top: 50%; margin: -15vmax 0 0 -15vmax; background: radial-gradient(circle, rgba(232,165,152,0.19), transparent 65%); animation: orb-pulse 9s ease-in-out infinite; }
 .hero-dust { position: absolute; inset: -50%; background-image: radial-gradient(rgba(249,246,240,0.4) 1px, transparent 1.5px); background-size: 120px 120px; opacity: 0.2; animation: dust-rise 60s linear infinite; }
 @keyframes orb-drift-a { to { transform: translate(14vmax, 10vmax) scale(1.15); } }
 @keyframes orb-drift-b { to { transform: translate(-12vmax, -9vmax) scale(1.1); } }
