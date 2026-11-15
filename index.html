@@ -72,7 +72,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Estilos compilados (Tailwind CLI + CSS propio). Recompilar: ver tailwind/README.md -->
-  <link rel="stylesheet" href="./assets/styles.css?v=12" />
+  <link rel="stylesheet" href="./assets/styles.css?v=13" />
 </head>
 <body class="font-sans">
 
@@ -630,6 +630,10 @@
   <a id="mobileCta" href="#reservar" class="sm:hidden fixed bottom-4 inset-x-4 z-40 btn-gold rounded-full py-4 text-center text-sm font-semibold shadow-[0_12px_30px_-8px_rgba(0,0,0,0.6)] transition-[opacity,transform] duration-500" data-i18n="cta.mobile">Reservar Cita Ahora</a>
 
   <!-- GSAP + ScrollTrigger + Lenis -->
+  <!-- Cursor de lujo -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
+
   <script src="./assets/vendor/gsap.min.js" defer></script>
   <script src="./assets/vendor/ScrollTrigger.min.js" defer></script>
   <script src="./assets/vendor/lenis.min.js" defer></script>
@@ -1081,6 +1085,33 @@
         gsap.ticker.lagSmoothing(0);
       }
       window.lenis = lenis;
+
+      /* ---------- Cursor de lujo (solo ratón, sin "reducir movimiento") ---------- */
+      (function () {
+        const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (!finePointer || prefersReducedMotion) return;
+        const dot = document.querySelector('.cursor-dot');
+        const ring = document.querySelector('.cursor-ring');
+        if (!dot || !ring) return;
+
+        const dotX = gsap.quickTo(dot, 'x', { duration: 0.08, ease: 'power3.out' });
+        const dotY = gsap.quickTo(dot, 'y', { duration: 0.08, ease: 'power3.out' });
+        const ringX = gsap.quickTo(ring, 'x', { duration: 0.45, ease: 'power3.out' });
+        const ringY = gsap.quickTo(ring, 'y', { duration: 0.45, ease: 'power3.out' });
+        const INTERACTIVE = 'a, button, input, select, textarea, label, [role="radio"], summary';
+
+        window.addEventListener('mousemove', function (e) {
+          document.body.classList.add('cursor-on');
+          dotX(e.clientX); dotY(e.clientY);
+          ringX(e.clientX); ringY(e.clientY);
+        }, { passive: true });
+        document.addEventListener('mouseleave', function () { document.body.classList.remove('cursor-on'); });
+        document.addEventListener('mouseover', function (e) {
+          ring.classList.toggle('is-hover', !!(e.target.closest && e.target.closest(INTERACTIVE)));
+        });
+        window.addEventListener('mousedown', function () { ring.classList.add('is-down'); });
+        window.addEventListener('mouseup', function () { ring.classList.remove('is-down'); });
+      })();
 
       /* ---------- Preloader: Split-Door Luxury Reveal ---------- */
       (function () {
