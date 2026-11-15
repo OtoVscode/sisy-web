@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="es-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Panel · Studio Glow</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2312100E'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' font-style='italic' text-anchor='middle' fill='%23C6A87C'%3EG%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/styles.css?v=18" />
+</head>
+<body class="font-sans bg-noir text-cream min-h-screen">
+
+  <!-- ===================== ACCESO ===================== -->
+  <section id="login" class="min-h-screen flex items-center justify-center px-6">
+    <form id="loginForm" class="w-full max-w-sm rounded-3xl border border-champagne/25 bg-[#1A1714] p-8" novalidate>
+      <p class="text-[11px] tracking-luxe uppercase text-champagne font-medium">Studio Glow</p>
+      <h1 class="font-serif font-light text-4xl mt-3">Panel de <span class="italic text-champagne">citas</span></h1>
+      <div id="loginEmailWrap" class="hidden mt-8">
+        <label for="loginEmail" class="block text-[11px] tracking-luxe uppercase text-cream/60 mb-2">Email</label>
+        <input id="loginEmail" type="email" autocomplete="username" class="w-full bg-transparent border-b border-cream/25 focus:border-champagne outline-none py-3 text-base" />
+      </div>
+      <div class="mt-8">
+        <label id="loginPassLabel" for="loginPass" class="block text-[11px] tracking-luxe uppercase text-cream/60 mb-2">Clave de acceso</label>
+        <input id="loginPass" type="password" autocomplete="current-password" class="w-full bg-transparent border-b border-cream/25 focus:border-champagne outline-none py-3 text-base" />
+      </div>
+      <p id="loginError" class="hidden text-sm text-[#E8A598] mt-4" role="alert">Clave incorrecta.</p>
+      <button type="submit" class="btn-gold w-full mt-8 rounded-full px-6 py-4 text-sm font-semibold">Entrar</button>
+      <p id="loginDemoHint" class="mt-6 text-xs text-cream/40 leading-relaxed">Modo demostración: las citas se guardan en este navegador. Clave de prueba: <span class="text-champagne">glow2026</span></p>
+    </form>
+  </section>
+
+  <!-- ===================== PANEL ===================== -->
+  <div id="app" class="hidden">
+    <header class="sticky top-0 z-40 border-b border-cream/10 bg-noir/90 backdrop-blur-md">
+      <div class="max-w-6xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between gap-4">
+        <p class="font-serif text-xl tracking-[0.2em]">STUDIO <span class="italic text-champagne tracking-normal">Glow</span> <span class="hidden sm:inline text-cream/40 text-sm tracking-normal font-sans ml-2">· Panel</span></p>
+        <div class="flex items-center gap-2">
+          <a href="./index.html#reservar" target="_blank" rel="noopener" class="min-h-[44px] inline-flex items-center rounded-full border border-cream/15 px-4 text-sm text-cream/70 hover:border-champagne hover:text-champagne transition-colors">Ver web</a>
+          <button id="logoutBtn" type="button" class="min-h-[44px] rounded-full border border-cream/15 px-4 text-sm text-cream/70 hover:border-champagne hover:text-champagne transition-colors">Salir</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-5 md:px-8 py-8 md:py-10">
+      <!-- Navegación de fechas -->
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+        <div>
+          <p class="text-[11px] tracking-luxe uppercase text-champagne font-medium" id="viewKicker">Agenda del día</p>
+          <h1 id="viewTitle" class="font-serif font-light text-4xl md:text-5xl mt-2 first-letter:uppercase"></h1>
+        </div>
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <div class="inline-flex rounded-full border border-cream/15 p-1" role="tablist" aria-label="Vista">
+            <button type="button" class="view-tab min-h-[40px] rounded-full px-3 sm:px-4 text-sm" data-view="day" role="tab">Día</button>
+            <button type="button" class="view-tab min-h-[40px] rounded-full px-3 sm:px-4 text-sm" data-view="week" role="tab">Semana</button>
+          </div>
+          <button id="prevBtn" type="button" class="w-11 h-11 rounded-full border border-cream/15 hover:border-champagne transition-colors" aria-label="Anterior">‹</button>
+          <button id="todayBtn" type="button" class="min-h-[44px] rounded-full border border-cream/15 px-3 sm:px-4 text-sm hover:border-champagne transition-colors">Hoy</button>
+          <button id="nextBtn" type="button" class="w-11 h-11 rounded-full border border-cream/15 hover:border-champagne transition-colors" aria-label="Siguiente">›</button>
+        </div>
+      </div>
+
+      <!-- Resumen -->
+      <div class="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="rounded-2xl border border-cream/10 bg-[#1A1714] p-5">
+          <p class="text-[11px] tracking-[0.2em] uppercase text-cream/50">Citas</p>
+          <p id="statCount" class="font-serif text-4xl mt-2">0</p>
+        </div>
+        <div class="rounded-2xl border border-champagne/30 bg-champagne/10 p-5">
+          <p class="text-[11px] tracking-[0.2em] uppercase text-champagne">Total</p>
+          <p id="statTotal" class="font-serif text-4xl mt-2 text-champagne">$0</p>
+        </div>
+        <div class="rounded-2xl border border-cream/10 bg-[#1A1714] p-5">
+          <p class="text-[11px] tracking-[0.2em] uppercase text-cream/50">Horas libres</p>
+          <p id="statFree" class="font-serif text-3xl md:text-4xl mt-2">0 h</p>
+        </div>
+        <div class="rounded-2xl border border-cream/10 bg-[#1A1714] p-5">
+          <p class="text-[11px] tracking-[0.2em] uppercase text-cream/50">Próxima cita</p>
+          <p id="statNext" class="font-serif text-xl md:text-2xl mt-2 leading-tight">—</p>
+        </div>
+      </div>
+
+      <!-- Vista de día -->
+      <section id="dayView" class="mt-8 grid lg:grid-cols-[1fr_340px] gap-6">
+        <div>
+          <h2 class="text-[11px] tracking-luxe uppercase text-cream/60 mb-4">Citas</h2>
+          <ol id="dayList" class="flex flex-col gap-3"></ol>
+          <p id="dayEmpty" class="hidden rounded-2xl border border-dashed border-cream/15 px-5 py-10 text-center text-cream/50">No hay citas este día.</p>
+        </div>
+        <aside class="flex flex-col gap-6">
+          <div class="rounded-2xl border border-cream/10 bg-[#1A1714] p-5">
+            <h2 class="text-[11px] tracking-luxe uppercase text-cream/60">Espacios libres</h2>
+            <ul id="gapList" class="mt-4 flex flex-col gap-2"></ul>
+            <p id="closedNote" class="hidden mt-4 text-sm text-cream/50">Día cerrado según tu horario.</p>
+          </div>
+          <form id="blockForm" class="rounded-2xl border border-cream/10 bg-[#1A1714] p-5" novalidate>
+            <h2 class="text-[11px] tracking-luxe uppercase text-cream/60">Bloquear horario</h2>
+            <p class="text-xs text-cream/40 mt-1">Vacaciones, descanso o una cita que tomaste por teléfono.</p>
+            <div class="grid grid-cols-2 gap-3 mt-4">
+              <label class="text-xs text-cream/60">Desde
+                <input id="blockFrom" type="time" step="1800" value="13:00" class="mt-1 w-full min-h-[44px] rounded-xl bg-noir border border-cream/15 focus:border-champagne outline-none px-3 text-cream" />
+              </label>
+              <label class="text-xs text-cream/60">Hasta
+                <input id="blockTo" type="time" step="1800" value="14:00" class="mt-1 w-full min-h-[44px] rounded-xl bg-noir border border-cream/15 focus:border-champagne outline-none px-3 text-cream" />
+              </label>
+            </div>
+            <label class="block text-xs text-cream/60 mt-3">Motivo (opcional)
+              <input id="blockReason" type="text" maxlength="60" placeholder="Almuerzo" class="mt-1 w-full min-h-[44px] rounded-xl bg-noir border border-cream/15 focus:border-champagne outline-none px-3 text-cream placeholder:text-cream/25" />
+            </label>
+            <div class="flex gap-2 mt-4">
+              <button type="submit" class="flex-1 min-h-[44px] rounded-full border border-champagne/50 text-champagne text-sm hover:bg-champagne/10 transition-colors">Bloquear</button>
+              <button id="blockDayBtn" type="button" class="flex-1 min-h-[44px] rounded-full border border-cream/15 text-cream/70 text-sm hover:border-champagne transition-colors">Todo el día</button>
+            </div>
+            <p id="blockError" class="hidden text-xs text-[#E8A598] mt-3" role="alert"></p>
+            <ul id="blockList" class="mt-4 flex flex-col gap-2"></ul>
+          </form>
+        </aside>
+      </section>
+
+      <!-- Vista de semana -->
+      <section id="weekView" class="hidden mt-8">
+        <div id="weekGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3"></div>
+      </section>
+
+      <!-- Herramientas de demostración -->
+      <section class="mt-12 rounded-2xl border border-cream/10 p-5 flex flex-col md:flex-row md:items-center gap-4 md:justify-between">
+        <div>
+          <p class="text-sm text-cream/80">Aviso por email: <span id="notifyEmailLabel" class="text-champagne"></span></p>
+          <p class="text-xs text-cream/40 mt-1">La primera vez llega un correo de FormSubmit para activar el aviso. Pulsa "Activate" y desde entonces llega cada cita nueva.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button id="testEmailBtn" type="button" class="min-h-[44px] rounded-full border border-cream/15 px-4 text-sm text-cream/70 hover:border-champagne hover:text-champagne transition-colors">Probar email</button>
+          <button id="seedBtn" type="button" class="demo-only min-h-[44px] rounded-full border border-cream/15 px-4 text-sm text-cream/70 hover:border-champagne hover:text-champagne transition-colors">Cargar citas de ejemplo</button>
+          <button id="clearBtn" type="button" class="demo-only min-h-[44px] rounded-full border border-cream/15 px-4 text-sm text-cream/50 hover:border-[#E8A598] hover:text-[#E8A598] transition-colors">Borrar todo (demo)</button>
+        </div>
+      </section>
+      <p id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max max-w-[calc(100%-2rem)] text-center rounded-full bg-champagne text-noir px-5 py-3 text-sm font-medium shadow-2xl" role="status"></p>
+    </main>
+  </div>
+
+  <script src="./assets/booking.js?v=1"></script>
+  <script>
+  (function () {
+    'use strict';
+    const SB = window.StudioBooking;
+    const CFG = SB.config;
+    const isDemo = CFG.storage !== 'supabase';
+    const $ = function (id) { return document.getElementById(id); };
+    const state = { view: 'day', date: SB.toDateStr(new Date()) };
+
+    /* ---------- Acceso ---------- */
+    function showApp() {
+      $('login').classList.add('hidden');
+      $('app').classList.remove('hidden');
+      render();
+    }
+    if (!isDemo) {
+      $('loginEmailWrap').classList.remove('hidden');
+      $('loginPassLabel').textContent = 'Contraseña';
+      $('loginDemoHint').classList.add('hidden');
+      document.querySelectorAll('.demo-only').forEach(function (el) { el.classList.add('hidden'); });
+    }
+    try { if (sessionStorage.getItem('sg_admin') === '1') showApp(); } catch (e) { /* sin almacenamiento */ }
+
+    $('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const pass = $('loginPass').value;
+      const ok = function () {
+        try { sessionStorage.setItem('sg_admin', '1'); } catch (err) { /* sin almacenamiento */ }
+        $('loginError').classList.add('hidden');
+        showApp();
+      };
+      const fail = function () { $('loginError').classList.remove('hidden'); };
+      if (isDemo) return pass === CFG.adminPin ? ok() : fail();
+      SB.driver().signIn($('loginEmail').value.trim(), pass).then(ok, fail);
+    });
+    $('logoutBtn').addEventListener('click', function () {
+      try { sessionStorage.removeItem('sg_admin'); localStorage.removeItem('sg_sb_session'); } catch (e) { /* nada */ }
+      location.reload();
+    });
+
+    /* ---------- Utilidades ---------- */
+    function addDays(dateStr, n) {
+      const d = SB.parseDate(dateStr);
+      d.setDate(d.getDate() + n);
+      return SB.toDateStr(d);
+    }
+    function weekStart(dateStr) {
+      const d = SB.parseDate(dateStr);
+      const diff = (d.getDay() + 6) % 7; // lunes
+      d.setDate(d.getDate() - diff);
+      return SB.toDateStr(d);
+    }
+    function money(n) { return '$' + Number(n || 0).toLocaleString('en-US'); }
+    function hoursLabel(min) {
+      const h = Math.floor(min / 60), m = min % 60;
+      return m ? h + ' h ' + m + ' min' : h + ' h';
+    }
+    function toast(msg) {
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(function () { t.classList.add('hidden'); }, 2600);
+    }
+    function el(tag, cls, text) {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    }
+    function active(list) { return list.filter(function (a) { return a.status !== 'cancelled'; }); }
+    function busyFrom(appts, blocks) {
+      return active(appts).map(function (a) { return { date: a.date, start: a.start, end: a.end }; })
+        .concat(blocks.map(function (b) { return { date: b.date, start: b.start, end: b.end }; }));
+    }
+    function waLink(phone, name, appt) {
+      let digits = String(phone).replace(/\D/g, '');
+      if (digits.length === 10) digits = '1' + digits;
+      const msg = 'Hola ' + name + ', te recuerdo tu cita en ' + window.location.hostname.replace(/^www\./, '') +
+        ': ' + appt.service_name + ', ' + SB.formatDateLong(appt.date, 'es') + ' a las ' + SB.format12(appt.start) + '.';
+      return 'https://wa.me/' + digits + '?text=' + encodeURIComponent(msg);
+    }
+
+    /* ---------- Render ---------- */
+    function render() {
+      document.querySelectorAll('.view-tab').forEach(function (t) {
+        const on = t.getAttribute('data-view') === state.view;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.className = 'view-tab min-h-[40px] rounded-full px-3 sm:px-4 text-sm transition-colors ' + (on ? 'bg-champagne text-noir font-semibold' : 'text-cream/70 hover:text-champagne');
+      });
+      $('dayView').classList.toggle('hidden', state.view !== 'day');
+      $('weekView').classList.toggle('hidden', state.view !== 'week');
+      $('notifyEmailLabel').textContent = CFG.notifyEmail || 'sin configurar';
+      return state.view === 'day' ? renderDay() : renderWeek();
+    }
+
+    function renderStats(appts, freeMin) {
+      const list = active(appts);
+      $('statCount').textContent = String(list.length);
+      $('statTotal').textContent = money(list.reduce(function (sum, a) { return sum + Number(a.price || 0); }, 0));
+      $('statFree').textContent = hoursLabel(freeMin);
+      const now = new Date();
+      const nowKey = SB.toDateStr(now) + ' ' + SB.toHHMM(now.getHours() * 60 + now.getMinutes());
+      const next = list.filter(function (a) { return a.date + ' ' + a.start >= nowKey; })
+        .sort(function (a, b) { return (a.date + a.start).localeCompare(b.date + b.start); })[0];
+      $('statNext').textContent = next
+        ? SB.format12(next.start) + ' · ' + next.client_name + (next.date !== SB.toDateStr(now) ? ' (' + SB.parseDate(next.date).toLocaleDateString('es-US', { weekday: 'short', day: 'numeric' }) + ')' : '')
+        : '—';
+    }
+
+    function renderDay() {
+      const date = state.date;
+      $('viewKicker').textContent = date === SB.toDateStr(new Date()) ? 'Agenda de hoy' : 'Agenda del día';
+      $('viewTitle').textContent = SB.formatDateLong(date, 'es');
+      return Promise.all([SB.driver().listAppointments(date, date), SB.driver().listBlocks(date, date)]).then(function (r) {
+        const appts = r[0].slice().sort(function (a, b) { return a.start.localeCompare(b.start); });
+        const blocks = r[1];
+        const gaps = SB.freeGaps(date, busyFrom(appts, blocks));
+        const freeMin = gaps.reduce(function (s, g) { return s + SB.toMin(g.end) - SB.toMin(g.start); }, 0);
+        renderStats(appts, freeMin);
+
+        // Citas
+        const list = $('dayList');
+        list.innerHTML = '';
+        $('dayEmpty').classList.toggle('hidden', appts.length > 0);
+        appts.forEach(function (a) {
+          const cancelled = a.status === 'cancelled';
+          const li = el('li', 'rounded-2xl border p-5 flex flex-col sm:flex-row sm:items-center gap-4 ' + (cancelled ? 'border-cream/5 opacity-50' : 'border-cream/10 bg-[#1A1714]'));
+          const time = el('div', 'sm:w-32 shrink-0');
+          time.append(el('p', 'font-serif text-2xl text-champagne leading-none', SB.format12(a.start)), el('p', 'text-xs text-cream/45 mt-1', 'hasta ' + SB.format12(a.end)));
+          const info = el('div', 'flex-1 min-w-0');
+          info.append(el('p', 'font-medium text-lg truncate', a.client_name + (cancelled ? ' · cancelada' : '')));
+          const meta = el('p', 'text-sm text-cream/60 mt-1');
+          meta.append(document.createTextNode(SB.serviceName(a.service_id, 'es') + ' · ' + a.duration + ' min · '));
+          const tel = el('a', 'text-cream/80 underline underline-offset-2 decoration-cream/20 hover:text-champagne', a.client_phone);
+          tel.href = 'tel:' + String(a.client_phone).replace(/[^\d+]/g, '');
+          meta.append(tel);
+          info.append(meta);
+          if (a.note) info.append(el('p', 'text-xs text-champagne/80 mt-1', a.note));
+          const right = el('div', 'flex items-center gap-2 sm:flex-col sm:items-end');
+          right.append(el('p', 'font-serif text-2xl', money(a.price)));
+          if (!cancelled) {
+            const actions = el('div', 'flex gap-2');
+            const wa = el('a', 'min-h-[36px] inline-flex items-center rounded-full border border-cream/15 px-3 text-xs text-cream/70 hover:border-champagne hover:text-champagne', 'WhatsApp');
+            wa.href = waLink(a.client_phone, a.client_name, a);
+            wa.target = '_blank'; wa.rel = 'noopener';
+            const cancel = el('button', 'min-h-[36px] rounded-full border border-cream/15 px-3 text-xs text-cream/60 hover:border-[#E8A598] hover:text-[#E8A598]', 'Cancelar');
+            cancel.type = 'button';
+            cancel.addEventListener('click', function () {
+              if (!confirm('¿Cancelar la cita de ' + a.client_name + ' a las ' + SB.format12(a.start) + '? El horario quedará libre.')) return;
+              SB.driver().updateAppointment(a.id, { status: 'cancelled' }).then(function () { toast('Cita cancelada. El horario quedó libre.'); render(); });
+            });
+            actions.append(wa, cancel);
+            right.append(actions);
+          }
+          li.append(time, info, right);
+          list.append(li);
+        });
+
+        // Espacios libres
+        const hours = SB.openingHours(date);
+        $('closedNote').classList.toggle('hidden', !!hours);
+        const gapList = $('gapList');
+        gapList.innerHTML = '';
+        gaps.forEach(function (g) {
+          const li = el('li', 'flex items-center justify-between rounded-xl bg-noir border border-cream/10 px-4 py-3 text-sm');
+          li.append(el('span', '', SB.format12(g.start) + ' – ' + SB.format12(g.end)), el('span', 'text-champagne text-xs', hoursLabel(SB.toMin(g.end) - SB.toMin(g.start))));
+          gapList.append(li);
+        });
+        if (hours && !gaps.length) gapList.append(el('li', 'text-sm text-cream/50', 'Día completo. ¡No quedan espacios!'));
+
+        // Bloqueos
+        const blockList = $('blockList');
+        blockList.innerHTML = '';
+        blocks.sort(function (x, y) { return x.start.localeCompare(y.start); }).forEach(function (b) {
+          const li = el('li', 'flex items-center justify-between gap-2 rounded-xl border border-cream/10 px-3 py-2 text-sm');
+          li.append(el('span', 'text-cream/75', SB.format12(b.start) + ' – ' + SB.format12(b.end) + (b.reason ? ' · ' + b.reason : '')));
+          const del = el('button', 'min-h-[36px] px-2 text-xs text-cream/50 hover:text-[#E8A598]', 'Quitar');
+          del.type = 'button';
+          del.addEventListener('click', function () { SB.driver().deleteBlock(b.id).then(function () { toast('Bloqueo quitado.'); render(); }); });
+          li.append(del);
+          blockList.append(li);
+        });
+      });
+    }
+
+    function renderWeek() {
+      const start = weekStart(state.date);
+      const end = addDays(start, 6);
+      $('viewKicker').textContent = 'Agenda de la semana';
+      const s = SB.parseDate(start), e = SB.parseDate(end);
+      $('viewTitle').textContent = s.getDate() + ' ' + s.toLocaleDateString('es-US', { month: 'short' }).replace('.', '') + ' – ' +
+        e.getDate() + ' ' + e.toLocaleDateString('es-US', { month: 'short' }).replace('.', '');
+      return Promise.all([SB.driver().listAppointments(start, end), SB.driver().listBlocks(start, end)]).then(function (r) {
+        const appts = r[0], blocks = r[1];
+        const busy = busyFrom(appts, blocks);
+        let freeTotal = 0;
+        const grid = $('weekGrid');
+        grid.innerHTML = '';
+        for (let i = 0; i < 7; i++) {
+          const day = addDays(start, i);
+          const dayAppts = active(appts.filter(function (a) { return a.date === day; }))
+            .sort(function (a, b) { return a.start.localeCompare(b.start); });
+          const gaps = SB.freeGaps(day, busy);
+          const freeMin = gaps.reduce(function (sum, g) { return sum + SB.toMin(g.end) - SB.toMin(g.start); }, 0);
+          freeTotal += freeMin;
+          const open = !!SB.openingHours(day);
+          const isToday = day === SB.toDateStr(new Date());
+          const card = el('button', 'text-left rounded-2xl border p-4 min-h-[160px] flex flex-col transition-colors hover:border-champagne ' +
+            (isToday ? 'border-champagne/60 bg-champagne/5' : open ? 'border-cream/10 bg-[#1A1714]' : 'border-cream/5 opacity-50'));
+          card.type = 'button';
+          const d = SB.parseDate(day);
+          card.append(
+            el('p', 'text-[11px] uppercase tracking-[0.2em] text-cream/50', d.toLocaleDateString('es-US', { weekday: 'short' }).replace('.', '')),
+            el('p', 'font-serif text-3xl leading-none mt-1', String(d.getDate()))
+          );
+          if (!open) {
+            card.append(el('p', 'text-xs text-cream/40 mt-3', 'Cerrado'));
+          } else {
+            const ul = el('ul', 'mt-3 flex flex-col gap-1 text-xs text-cream/75 flex-1');
+            dayAppts.slice(0, 5).forEach(function (a) {
+              ul.append(el('li', 'truncate', SB.format12(a.start) + ' · ' + a.client_name));
+            });
+            if (dayAppts.length > 5) ul.append(el('li', 'text-cream/45', '+' + (dayAppts.length - 5) + ' más'));
+            if (!dayAppts.length) ul.append(el('li', 'text-cream/40', 'Sin citas'));
+            card.append(ul);
+            const foot = el('div', 'mt-3 pt-3 border-t border-cream/10 flex items-center justify-between text-xs');
+            foot.append(
+              el('span', 'text-champagne font-medium', money(dayAppts.reduce(function (sum, a) { return sum + Number(a.price || 0); }, 0))),
+              el('span', 'text-cream/45', hoursLabel(freeMin) + ' libres')
+            );
+            card.append(foot);
+          }
+          card.addEventListener('click', function () { state.date = day; state.view = 'day'; render(); });
+          grid.append(card);
+        }
+        renderStats(appts, freeTotal);
+      });
+    }
+
+    /* ---------- Controles ---------- */
+    document.querySelectorAll('.view-tab').forEach(function (t) {
+      t.addEventListener('click', function () { state.view = t.getAttribute('data-view'); render(); });
+    });
+    $('prevBtn').addEventListener('click', function () { state.date = addDays(state.date, state.view === 'week' ? -7 : -1); render(); });
+    $('nextBtn').addEventListener('click', function () { state.date = addDays(state.date, state.view === 'week' ? 7 : 1); render(); });
+    $('todayBtn').addEventListener('click', function () { state.date = SB.toDateStr(new Date()); render(); });
+
+    function addBlock(from, to, reason) {
+      const err = $('blockError');
+      if (!from || !to || SB.toMin(to) <= SB.toMin(from)) {
+        err.textContent = 'La hora "hasta" debe ser después de "desde".';
+        err.classList.remove('hidden');
+        return;
+      }
+      err.classList.add('hidden');
+      SB.driver().insertBlock({ id: SB.uid(), date: state.date, start: from, end: to, reason: reason || '' })
+        .then(function () { toast('Horario bloqueado. Las clientas ya no pueden elegirlo.'); render(); });
+    }
+    $('blockForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      addBlock($('blockFrom').value, $('blockTo').value, $('blockReason').value.trim());
+    });
+    $('blockDayBtn').addEventListener('click', function () {
+      const hours = SB.openingHours(state.date);
+      if (!hours) { toast('Ese día ya está cerrado.'); return; }
+      addBlock(hours[0], hours[1], $('blockReason').value.trim() || 'Día bloqueado');
+    });
+
+    $('testEmailBtn').addEventListener('click', function () {
+      SB.notifyOwner({
+        client_name: 'Clienta de prueba', client_phone: '(713) 555-0100', service_name: 'Lashes',
+        date: SB.toDateStr(new Date()), start: '15:00', end: '17:00', price: 150, note: 'Email de prueba desde el panel'
+      }).then(function (ok) {
+        toast(ok ? 'Email enviado. Revisa tu bandeja (y la carpeta de spam).' : 'No se pudo enviar el email. Revisa la conexión.');
+      });
+    });
+
+    $('seedBtn').addEventListener('click', function () {
+      const today = SB.toDateStr(new Date());
+      const base = SB.bookableDays().filter(function (d) { return d.open && d.date !== today; }).slice(0, 4).map(function (d) { return d.date; });
+      const sample = [
+        [base[0], '10:00', 'pmu', 'Valentina Ruiz', '(713) 555-0142'],
+        [base[0], '14:00', 'laminado', 'Camila Torres', '(832) 555-0178'],
+        [base[0], '16:00', 'lashes', 'Sofía Méndez', '(281) 555-0110'],
+        [base[1], '09:00', 'makeup', 'Isabella García', '(713) 555-0193'],
+        [base[1], '13:30', 'lashes', 'Mariana López', '(346) 555-0127'],
+        [base[2], '11:00', 'laminado', 'Daniela Herrera', '(713) 555-0165'],
+        [base[3], '15:00', 'pmu', 'Lucía Fernández', '(832) 555-0136']
+      ];
+      const from = base[0], to = base[base.length - 1];
+      SB.listBusy(from, to).then(function (busy) {
+        // Solo se cargan las citas de ejemplo que no chocan con citas reales
+        const free = sample.filter(function (x) {
+          const s = SB.serviceById(x[2]);
+          const a = SB.toMin(x[1]), b = a + s.duration;
+          const clash = busy.some(function (k) { return k.date === x[0] && a < SB.toMin(k.end) && SB.toMin(k.start) < b; });
+          if (!clash) busy.push({ date: x[0], start: x[1], end: SB.toHHMM(b) });
+          return !clash;
+        });
+        return Promise.all(free.map(insertSample));
+      }).then(function () { toast('Citas de ejemplo cargadas.'); render(); });
+      function insertSample(x) {
+        const s = SB.serviceById(x[2]);
+        return SB.driver().insertAppointment({
+          id: SB.uid(), date: x[0], start: x[1], end: SB.toHHMM(SB.toMin(x[1]) + s.duration),
+          service_id: x[2], service_name: s.es, duration: s.duration, price: s.price,
+          client_name: x[3], client_phone: x[4], note: '', lang: 'es', status: 'confirmed', created_at: new Date().toISOString()
+        });
+      }
+    });
+    $('clearBtn').addEventListener('click', function () {
+      if (!confirm('¿Borrar todas las citas y bloqueos de esta demostración?')) return;
+      try { localStorage.removeItem('sg_appointments'); localStorage.removeItem('sg_blocks'); } catch (e) { /* nada */ }
+      toast('Demostración vacía.');
+      render();
+    });
+
+    // Se actualiza solo: cuando alguien agenda en otra pestaña y cada 30 segundos
+    window.addEventListener('storage', function (e) {
+      if (e.key === 'sg_appointments' || e.key === 'sg_blocks') { render(); toast('Agenda actualizada.'); }
+    });
+    setInterval(function () { if (!$('app').classList.contains('hidden')) render(); }, 30000);
+  })();
+  </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 /** Configuración de Tailwind para Studio Glow (antes estaba inline en index.html). */
 /** Recompilar: ver tailwind/README.md */
 module.exports = {
-  content: ['../index.html'],
+  content: ['../index.html', '../admin.html'],
   theme: {
     extend: {
       colors: {

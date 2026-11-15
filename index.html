@@ -72,7 +72,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Estilos compilados (Tailwind CLI + CSS propio). Recompilar: ver tailwind/README.md -->
-  <link rel="stylesheet" href="./assets/styles.css?v=16" />
+  <link rel="stylesheet" href="./assets/styles.css?v=18" />
 </head>
 <body class="font-sans">
 
@@ -575,8 +575,8 @@
         </div>
 
         <!-- Tarjeta de agendamiento -->
-        <form id="bookingForm" class="rs-card bg-[#12100E] text-[#F9F6F0] p-8 md:p-10 rounded-3xl shadow-2xl" novalidate>
-          <p class="font-serif text-3xl leading-tight" data-i18n="rs.formTitle">Agenda en <span class="italic text-[#C6A87C]">tres pasos</span></p>
+        <form id="bookingForm" class="rs-card min-w-0 bg-[#12100E] text-[#F9F6F0] p-8 md:p-10 rounded-3xl shadow-2xl" novalidate>
+          <p class="font-serif text-3xl leading-tight" data-i18n="rs.formTitle">Agenda en <span class="italic text-[#C6A87C]">cuatro pasos</span></p>
 
           <fieldset class="mt-8">
             <legend class="text-[11px] tracking-luxe uppercase text-[#F9F6F0]/60 mb-4" data-i18n="rs.step1">1 · Servicio</legend>
@@ -588,22 +588,46 @@
             </div>
           </fieldset>
 
+          <div id="bkFields">
           <div class="mt-8">
-            <label for="bkName" class="block text-[11px] tracking-luxe uppercase text-[#F9F6F0]/60 mb-3" data-i18n="rs.step2">2 · Tu nombre</label>
+            <p class="block text-[11px] tracking-luxe uppercase text-[#F9F6F0]/60 mb-3" data-i18n="rs.step2">2 · Elige el día</p>
+            <div id="bkDays" class="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x" role="radiogroup" aria-label="Día"></div>
+          </div>
+
+          <div class="mt-6">
+            <p class="block text-[11px] tracking-luxe uppercase text-[#F9F6F0]/60 mb-3" data-i18n="rs.step3">3 · Elige la hora</p>
+            <div id="bkSlots" class="grid grid-cols-3 sm:grid-cols-4 gap-2" role="radiogroup" aria-label="Hora"></div>
+            <p id="bkSlotsEmpty" class="hidden text-sm text-[#F9F6F0]/55 py-3" data-i18n="rs.noSlots">No quedan horarios este día. Prueba con otro.</p>
+            <p id="bkSlotError" class="hidden text-xs text-[#E8A598] mt-2" role="alert" data-i18n="rs.slotError">Elige un día y una hora.</p>
+          </div>
+
+          <div class="mt-8">
+            <p class="block text-[11px] tracking-luxe uppercase text-[#F9F6F0]/60 mb-3" data-i18n="rs.step4">4 · Tus datos</p>
+            <label for="bkName" class="sr-only" data-i18n="rs.nameLabel">Tu nombre</label>
             <input id="bkName" name="nombre" type="text" autocomplete="given-name" required placeholder="Ej. Valentina" data-i18n-placeholder="rs.namePlaceholder" class="w-full bg-transparent border-b border-[#F9F6F0]/25 focus:border-[#C6A87C] outline-none py-3 text-base placeholder:text-[#F9F6F0]/30 transition-colors" />
             <p id="bkNameError" class="hidden text-xs text-[#E8A598] mt-2" role="alert" data-i18n="rs.nameError">Escribe tu nombre para continuar.</p>
+            <label for="bkPhone" class="sr-only" data-i18n="rs.phoneLabel">Tu teléfono</label>
+            <input id="bkPhone" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required placeholder="Teléfono · (713) 555-0199" data-i18n-placeholder="rs.phonePlaceholder" class="w-full mt-4 bg-transparent border-b border-[#F9F6F0]/25 focus:border-[#C6A87C] outline-none py-3 text-base placeholder:text-[#F9F6F0]/30 transition-colors" />
+            <p id="bkPhoneError" class="hidden text-xs text-[#E8A598] mt-2" role="alert" data-i18n="rs.phoneError">Escribe un teléfono válido para confirmarte la cita.</p>
           </div>
 
-          <div class="mt-8">
-            <label for="bkShift" class="block text-[11px] tracking-luxe uppercase text-[#F9F6F0]/60 mb-3" data-i18n="rs.step3">3 · Turno preferido</label>
-            <select id="bkShift" name="turno" class="w-full bg-[#1E1B18] border border-[#F9F6F0]/15 focus:border-[#C6A87C] outline-none rounded-xl px-4 py-3.5 text-base">
-              <option value="Mañana" data-i18n="rs.shiftMorning">Mañana</option>
-              <option value="Tarde" data-i18n="rs.shiftAfternoon">Tarde</option>
-              <option value="Sábado Especial" data-i18n="rs.shiftSaturday">Sábado Especial</option>
-            </select>
+          <p id="bkSummary" class="hidden mt-8 rounded-2xl border border-[#C6A87C]/25 bg-[#C6A87C]/5 px-4 py-3 text-sm text-[#F9F6F0]/80"></p>
+          <p id="bkSubmitError" class="hidden text-sm text-[#E8A598] mt-4" role="alert"></p>
+
+          <button id="bkSubmit" type="submit" class="btn-gold w-full mt-8 rounded-full px-6 py-4 text-sm font-semibold" data-i18n="rs.submit">Agendar mi cita</button>
           </div>
 
-          <button type="submit" class="btn-gold w-full mt-10 rounded-full px-6 py-4 text-sm font-semibold" data-i18n="rs.submit">Confirmar Disponibilidad por WhatsApp</button>
+          <div id="bkSuccess" class="hidden mt-8" aria-live="polite">
+            <p class="text-[11px] tracking-luxe uppercase text-[#C6A87C] font-medium" data-i18n="rs.okKicker">Cita confirmada</p>
+            <p class="font-serif text-3xl md:text-4xl leading-tight mt-3" data-i18n="rs.okTitle">¡Te esperamos!</p>
+            <p id="bkSuccessDetail" class="mt-4 text-[#F9F6F0]/75 leading-relaxed"></p>
+            <p class="mt-3 text-sm text-[#F9F6F0]/55" data-i18n="rs.okText">Si necesitas cambiarla o cancelarla, escríbenos por WhatsApp.</p>
+            <div class="mt-8 flex flex-col gap-3">
+              <a id="bkSuccessWa" href="#" target="_blank" rel="noopener" class="btn-gold rounded-full px-6 py-4 text-sm font-semibold text-center" data-i18n="rs.okWhatsapp">Avisar también por WhatsApp</a>
+              <button id="bkAnother" type="button" class="min-h-[44px] rounded-full border border-[#F9F6F0]/20 px-6 py-3 text-sm text-[#F9F6F0]/75 hover:border-[#C6A87C] hover:text-[#C6A87C] transition-colors" data-i18n="rs.okAnother">Agendar otra cita</button>
+            </div>
+          </div>
+
           <a href="https://booksy.com/" data-config-href="booksyUrl" target="_blank" rel="noopener" class="block text-center mt-2 py-3 text-sm text-[#F9F6F0]/60 hover:text-[#C6A87C] underline underline-offset-4 decoration-[#F9F6F0]/20 transition-colors" data-i18n="rs.booksy">O agenda directo en Booksy</a>
         </form>
       </div>
@@ -634,6 +658,7 @@
   <div class="cursor-dot" aria-hidden="true"></div>
   <div class="cursor-ring" aria-hidden="true"></div>
 
+  <script src="./assets/booking.js?v=1" defer></script>
   <script src="./assets/vendor/gsap.min.js" defer></script>
   <script src="./assets/vendor/ScrollTrigger.min.js" defer></script>
   <script src="./assets/vendor/lenis.min.js" defer></script>
@@ -821,17 +846,17 @@
         "rs.p2Text": "Pasado ese tiempo, el servicio puede reducirse o reprogramarse.",
         "rs.p3Title": "Cancelación con 48h",
         "rs.p3Text": "Avísanos con 48 horas de anticipación para conservar tu depósito.",
-        "rs.formTitle": "Agenda en <span class=\"italic text-[#C6A87C]\">tres pasos</span>",
+        "rs.formTitle": "Agenda en <span class=\"italic text-[#C6A87C]\">cuatro pasos</span>",
         "rs.step1": "1 · Servicio",
         "rs.svcMakeup": "Maquillaje &amp; Peinado",
         "rs.svcLamination": "Laminado &amp; Tinte",
-        "rs.step2": "2 · Tu nombre",
+        "rs.step2": "2 · Elige el día",
         "rs.nameError": "Escribe tu nombre para continuar.",
-        "rs.step3": "3 · Turno preferido",
+        "rs.step3": "3 · Elige la hora",
         "rs.shiftMorning": "Mañana",
         "rs.shiftAfternoon": "Tarde",
         "rs.shiftSaturday": "Sábado Especial",
-        "rs.submit": "Confirmar Disponibilidad por WhatsApp",
+        "rs.submit": "Agendar mi cita",
         "rs.booksy": "O agenda directo en Booksy",
         "footer.book": "Reservar",
         "footer.rights": "Todos los derechos reservados.",
@@ -858,6 +883,18 @@
         "adv.r.laminado.why": "Si tus cejas tienen vello pero les falta forma, el laminado las peina y les da volumen, y el tinte híbrido rellena la piel. Resultado natural, sin agujas, hasta 6 semanas.",
         "adv.r.pmu.name": "PMU Cejas",
         "adv.r.pmu.why": "Para huecos visibles o cejas escasas, la micropigmentación crea trazos que imitan el pelo y duran de 1 a 2 años. Diseño a medida y retoque de perfeccionamiento incluido.",
+        "rs.step4": "4 · Tus datos",
+        "rs.nameLabel": "Tu nombre",
+        "rs.phoneLabel": "Tu teléfono",
+        "rs.phonePlaceholder": "Teléfono · (713) 555-0199",
+        "rs.phoneError": "Escribe un teléfono válido para confirmarte la cita.",
+        "rs.noSlots": "No quedan horarios este día. Prueba con otro.",
+        "rs.slotError": "Elige un día y una hora.",
+        "rs.okKicker": "Cita confirmada",
+        "rs.okTitle": "¡Te esperamos!",
+        "rs.okText": "Si necesitas cambiarla o cancelarla, escríbenos por WhatsApp.",
+        "rs.okWhatsapp": "Avisar también por WhatsApp",
+        "rs.okAnother": "Agendar otra cita",
         "rs.namePlaceholder": "Ej. Valentina"
       },
       en: {
@@ -937,17 +974,17 @@
         "rs.p2Text": "After that, your service may be shortened or rescheduled.",
         "rs.p3Title": "48-hour cancellation",
         "rs.p3Text": "Let us know 48 hours in advance to keep your deposit.",
-        "rs.formTitle": "Book in <span class=\"italic text-[#C6A87C]\">three steps</span>",
+        "rs.formTitle": "Book in <span class=\"italic text-[#C6A87C]\">four steps</span>",
         "rs.step1": "1 · Service",
         "rs.svcMakeup": "Makeup &amp; Hair",
         "rs.svcLamination": "Lamination &amp; Tint",
-        "rs.step2": "2 · Your name",
+        "rs.step2": "2 · Choose the day",
         "rs.nameError": "Please enter your name to continue.",
-        "rs.step3": "3 · Preferred time",
+        "rs.step3": "3 · Choose the time",
         "rs.shiftMorning": "Morning",
         "rs.shiftAfternoon": "Afternoon",
         "rs.shiftSaturday": "Special Saturday",
-        "rs.submit": "Check Availability on WhatsApp",
+        "rs.submit": "Book my appointment",
         "rs.booksy": "Or book directly on Booksy",
         "footer.book": "Book",
         "footer.rights": "All rights reserved.",
@@ -974,6 +1011,18 @@
         "adv.r.laminado.why": "If your brows have hair but lack shape, lamination grooms and lifts them while the hybrid tint fills in the skin. A natural, needle-free result for up to 6 weeks.",
         "adv.r.pmu.name": "PMU Brows",
         "adv.r.pmu.why": "For visible gaps or sparse brows, micropigmentation creates hair-like strokes that last 1 to 2 years. Custom design and a perfecting touch-up included.",
+        "rs.step4": "4 · Your details",
+        "rs.nameLabel": "Your name",
+        "rs.phoneLabel": "Your phone",
+        "rs.phonePlaceholder": "Phone · (713) 555-0199",
+        "rs.phoneError": "Please enter a valid phone number so we can confirm.",
+        "rs.noSlots": "No times left on this day. Please try another.",
+        "rs.slotError": "Please choose a day and a time.",
+        "rs.okKicker": "Appointment confirmed",
+        "rs.okTitle": "See you soon!",
+        "rs.okText": "If you need to change or cancel it, message us on WhatsApp.",
+        "rs.okWhatsapp": "Also let us know on WhatsApp",
+        "rs.okAnother": "Book another appointment",
         "rs.namePlaceholder": "E.g. Valentina"
       }
     };
@@ -1032,6 +1081,7 @@
         // Idioma del documento
         document.documentElement.lang = lang === 'en' ? 'en-US' : 'es-US';
         window.STUDIO_LANG = lang;
+        window.dispatchEvent(new CustomEvent('studio:lang', { detail: lang }));
 
         // Estado visual del conmutador
         document.querySelectorAll('[data-lang-toggle]').forEach(function (btn) {
@@ -1466,7 +1516,6 @@
       const serviceButtons = Array.prototype.slice.call(document.querySelectorAll('.bk-service'));
       const nameInput = document.getElementById('bkName');
       const nameError = document.getElementById('bkNameError');
-      const shiftSelect = document.getElementById('bkShift');
       const mobileCta = document.getElementById('mobileCta');
       const yearEl = document.getElementById('year');
 
@@ -1618,34 +1667,226 @@
         }
       });
 
+      /* ---------- Calendario de citas (motor en assets/booking.js) ---------- */
+      const SB = window.StudioBooking;
+      const daysEl = document.getElementById('bkDays');
+      const slotsEl = document.getElementById('bkSlots');
+      const slotsEmpty = document.getElementById('bkSlotsEmpty');
+      const slotError = document.getElementById('bkSlotError');
+      const phoneInput = document.getElementById('bkPhone');
+      const phoneError = document.getElementById('bkPhoneError');
+      const summaryEl = document.getElementById('bkSummary');
+      const submitError = document.getElementById('bkSubmitError');
+      const submitBtn = document.getElementById('bkSubmit');
+      const fieldsEl = document.getElementById('bkFields');
+      const successEl = document.getElementById('bkSuccess');
+      const bkState = { date: null, start: null, busy: [] };
+
+      function bkLang() { return window.STUDIO_LANG === 'en' ? 'en' : 'es'; }
+      function bkServiceId() { return SB.serviceIdByLabel(getSelectedService()); }
+
+      const DAY_BASE = 'snap-start shrink-0 w-[4.5rem] min-h-[64px] rounded-2xl border flex flex-col items-center justify-center gap-0.5 transition-colors duration-300';
+      const SLOT_BASE = 'min-h-[44px] rounded-xl border text-sm transition-colors duration-300';
+
+      function renderDays() {
+        const lang = bkLang();
+        const locale = lang === 'en' ? 'en-US' : 'es-US';
+        const sidNow = bkServiceId();
+        // Un día abierto pero sin horas libres para este servicio también se apaga
+        const days = SB.bookableDays().map(function (d) {
+          return { date: d.date, open: d.open && SB.computeSlots(sidNow, d.date, bkState.busy).some(function (sl) { return sl.free; }) };
+        });
+        if (!bkState.date || !days.some(function (d) { return d.date === bkState.date && d.open; })) {
+          // Primer día con horarios libres para el servicio elegido
+          const firstFree = days.find(function (d) { return d.open; });
+          bkState.date = firstFree ? firstFree.date : null;
+        }
+        daysEl.innerHTML = '';
+        let activeBtn = null;
+        days.forEach(function (d) {
+          const date = SB.parseDate(d.date);
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.setAttribute('role', 'radio');
+          const active = d.date === bkState.date;
+          btn.setAttribute('aria-checked', active ? 'true' : 'false');
+          btn.disabled = !d.open;
+          btn.className = DAY_BASE + (active
+            ? ' bg-[#C6A87C] border-[#C6A87C] text-[#12100E]'
+            : d.open ? ' border-[#F9F6F0]/15 text-[#F9F6F0]/80 hover:border-[#C6A87C]' : ' border-[#F9F6F0]/5 text-[#F9F6F0]/20 cursor-not-allowed');
+          const wd = document.createElement('span');
+          wd.className = 'text-[10px] uppercase tracking-[0.15em]';
+          wd.textContent = date.toLocaleDateString(locale, { weekday: 'short' }).replace('.', '');
+          const num = document.createElement('span');
+          num.className = 'font-serif text-2xl leading-none';
+          num.textContent = String(date.getDate());
+          const mon = document.createElement('span');
+          mon.className = 'text-[10px] uppercase opacity-70';
+          mon.textContent = date.toLocaleDateString(locale, { month: 'short' }).replace('.', '');
+          btn.append(wd, num, mon);
+          btn.setAttribute('aria-label', SB.formatDateLong(d.date, lang));
+          if (active) activeBtn = btn;
+          btn.addEventListener('click', function () {
+            bkState.date = d.date;
+            bkState.start = null;
+            renderDays();
+            renderSlots();
+          });
+          daysEl.appendChild(btn);
+        });
+        // Mostrar el día elegido dentro de la tira (sin mover la página)
+        if (activeBtn) daysEl.scrollLeft = Math.max(0, activeBtn.offsetLeft - daysEl.offsetLeft - 8);
+      }
+
+      function renderSlots() {
+        const serviceId = bkServiceId();
+        slotsEl.innerHTML = '';
+        if (!bkState.date || !serviceId) { slotsEmpty.classList.remove('hidden'); updateSummary(); return; }
+        const slots = SB.computeSlots(serviceId, bkState.date, bkState.busy);
+        const anyFree = slots.some(function (sl) { return sl.free; });
+        slotsEmpty.classList.toggle('hidden', anyFree);
+        if (bkState.start && !slots.some(function (sl) { return sl.start === bkState.start && sl.free; })) bkState.start = null;
+        slots.forEach(function (sl) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.setAttribute('role', 'radio');
+          const active = sl.start === bkState.start;
+          btn.setAttribute('aria-checked', active ? 'true' : 'false');
+          btn.disabled = !sl.free;
+          btn.textContent = SB.format12(sl.start);
+          btn.className = SLOT_BASE + (active
+            ? ' bg-[#C6A87C] border-[#C6A87C] text-[#12100E] font-semibold'
+            : sl.free ? ' border-[#F9F6F0]/15 text-[#F9F6F0]/85 hover:border-[#C6A87C]' : ' border-transparent text-[#F9F6F0]/25 line-through cursor-not-allowed');
+          if (!sl.free) btn.setAttribute('aria-label', SB.format12(sl.start) + (bkLang() === 'en' ? ' (taken)' : ' (ocupado)'));
+          btn.addEventListener('click', function () {
+            bkState.start = sl.start;
+            slotError.classList.add('hidden');
+            renderSlots();
+          });
+          slotsEl.appendChild(btn);
+        });
+        updateSummary();
+      }
+
+      function updateSummary() {
+        const serviceId = bkServiceId();
+        const service = SB.serviceById(serviceId);
+        if (!bkState.date || !bkState.start || !service) { summaryEl.classList.add('hidden'); return; }
+        const lang = bkLang();
+        summaryEl.textContent = SB.serviceName(serviceId, lang) + ' · ' +
+          SB.formatDateLong(bkState.date, lang) + ' · ' + SB.format12(bkState.start) +
+          ' (' + service.duration + ' min)';
+        summaryEl.classList.remove('hidden');
+      }
+
+      function loadBusy() {
+        const days = SB.bookableDays();
+        return SB.listBusy(days[0].date, days[days.length - 1].date).then(function (busy) {
+          bkState.busy = busy || [];
+        }).catch(function () {
+          bkState.busy = [];
+        });
+      }
+
+      function refreshCalendar() {
+        return loadBusy().then(function () { renderDays(); renderSlots(); });
+      }
+
+      // Al cambiar de servicio (botones, tarjetas o asesor) se recalculan los horarios
+      const baseSelectService = selectService;
+      selectService = function (name) {
+        baseSelectService(name);
+        bkState.start = null;
+        renderDays();
+        renderSlots();
+      };
+      window.addEventListener('studio:lang', function () { renderDays(); renderSlots(); });
+      window.addEventListener('storage', function (e) { if (e.key === 'sg_appointments' || e.key === 'sg_blocks') refreshCalendar(); });
+      refreshCalendar();
+
+      phoneInput.addEventListener('input', function () {
+        if (phoneInput.value.replace(/\D/g, '').length >= 10) {
+          phoneError.classList.add('hidden');
+          phoneInput.removeAttribute('aria-invalid');
+        }
+      });
+
+      function whatsappUrl(name, serviceLabel, whenLabel) {
+        const studioName = window.STUDIO_CONFIG.studioName;
+        const note = window.getAdvisorNote ? window.getAdvisorNote() : '';
+        const message = bkLang() === 'en'
+          ? 'Hi ' + studioName + ', my name is ' + name + '. I just booked: ' + serviceLabel + ', ' + whenLabel + '.' + note + ' See you soon!'
+          : 'Hola ' + studioName + ', soy ' + name + '. Acabo de agendar: ' + serviceLabel + ', ' + whenLabel + '.' + note + ' ¡Nos vemos!';
+        return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(message);
+      }
+
       form.addEventListener('submit', function (event) {
         event.preventDefault();
+        submitError.classList.add('hidden');
         const name = nameInput.value.trim();
+        const phone = phoneInput.value.trim();
+        let firstInvalid = null;
+
+        if (!bkState.date || !bkState.start) {
+          slotError.classList.remove('hidden');
+          firstInvalid = firstInvalid || slotsEl;
+        }
         if (!name) {
           nameError.classList.remove('hidden');
           nameInput.setAttribute('aria-invalid', 'true');
-          nameInput.focus();
+          firstInvalid = firstInvalid || nameInput;
+        }
+        if (phone.replace(/\D/g, '').length < 10) {
+          phoneError.classList.remove('hidden');
+          phoneInput.setAttribute('aria-invalid', 'true');
+          firstInvalid = firstInvalid || phoneInput;
+        }
+        if (firstInvalid) {
+          if (firstInvalid.focus) firstInvalid.focus({ preventScroll: false });
           return;
         }
-        const activeServiceBtn = serviceButtons.find(function (btn) {
-          return btn.getAttribute('aria-checked') === 'true';
+
+        const serviceId = bkServiceId();
+        const lang = bkLang();
+        const original = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = lang === 'en' ? 'Booking…' : 'Agendando…';
+
+        SB.createAppointment({
+          serviceId: serviceId,
+          date: bkState.date,
+          start: bkState.start,
+          name: name,
+          phone: phone,
+          lang: lang,
+          note: window.getAdvisorNote ? window.getAdvisorNote().trim() : ''
+        }).then(function (appt) {
+          const whenLabel = SB.formatDateLong(appt.date, lang) + ', ' + SB.format12(appt.start);
+          const serviceLabel = SB.serviceName(serviceId, lang);
+          document.getElementById('bkSuccessDetail').textContent =
+            name + ' · ' + serviceLabel + ' · ' + whenLabel + '.';
+          document.getElementById('bkSuccessWa').href = whatsappUrl(name, serviceLabel, whenLabel);
+          fieldsEl.classList.add('hidden');
+          successEl.classList.remove('hidden');
+          ScrollTrigger.refresh();
+        }).catch(function (err) {
+          submitError.textContent = err && err.message === 'taken'
+            ? (lang === 'en' ? 'That time was just taken. Please choose another one.' : 'Ese horario se acaba de ocupar. Elige otro, por favor.')
+            : (lang === 'en' ? 'We could not save your appointment. Please try again or message us on WhatsApp.' : 'No pudimos guardar tu cita. Inténtalo de nuevo o escríbenos por WhatsApp.');
+          submitError.classList.remove('hidden');
+          bkState.start = null;
+          return refreshCalendar();
+        }).then(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = original;
         });
-        const serviceLabel = activeServiceBtn ? activeServiceBtn.textContent.trim() : getSelectedService();
-        const shiftLabel = shiftSelect.options[shiftSelect.selectedIndex].text.trim();
-        const studioName = window.STUDIO_CONFIG.studioName;
-        const message = window.STUDIO_LANG === 'en'
-          ? 'Hi ' + studioName + ', my name is ' + name + '. ' +
-            'I would like to book: ' + serviceLabel + '. ' +
-            'Preferred time: ' + shiftLabel + '.' +
-            (window.getAdvisorNote ? window.getAdvisorNote() : '') + ' ' +
-            'What availability do you have?'
-          : 'Hola ' + studioName + ', soy ' + name + '. ' +
-            'Me gustaría reservar: ' + serviceLabel + '. ' +
-            'Turno preferido: ' + shiftLabel + '.' +
-            (window.getAdvisorNote ? window.getAdvisorNote() : '') + ' ' +
-            '¿Qué disponibilidad tienen?';
-        const url = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(message);
-        window.open(url, '_blank', 'noopener');
+      });
+
+      document.getElementById('bkAnother').addEventListener('click', function () {
+        successEl.classList.add('hidden');
+        fieldsEl.classList.remove('hidden');
+        bkState.start = null;
+        refreshCalendar().then(function () { ScrollTrigger.refresh(); });
       });
 
       // Botón flotante móvil: se oculta dentro de #reservar y el footer
