@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./assets/styles.css?v=18" />
+  <link rel="stylesheet" href="./assets/styles.css?v=19" />
 </head>
 <body class="font-sans bg-noir text-cream min-h-screen">
 
@@ -388,6 +388,22 @@
     $('prevBtn').addEventListener('click', function () { state.date = addDays(state.date, state.view === 'week' ? -7 : -1); render(); });
     $('nextBtn').addEventListener('click', function () { state.date = addDays(state.date, state.view === 'week' ? 7 : 1); render(); });
     $('todayBtn').addEventListener('click', function () { state.date = SB.toDateStr(new Date()); render(); });
+
+    // Si el panel quedó abierto (o el iPad lo recupera de memoria) y ya cambió el día,
+    // al volver a mirarlo se abre otra vez en la agenda de hoy.
+    let lastToday = SB.toDateStr(new Date());
+    function syncToToday() {
+      const nowToday = SB.toDateStr(new Date());
+      if (nowToday !== lastToday) {
+        lastToday = nowToday;
+        state.date = nowToday;
+        state.view = 'day';
+        render();
+      }
+    }
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) syncToToday(); });
+    window.addEventListener('pageshow', function (e) { if (e.persisted) syncToToday(); });
+    window.addEventListener('focus', syncToToday);
 
     function addBlock(from, to, reason) {
       const err = $('blockError');

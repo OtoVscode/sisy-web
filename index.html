@@ -72,7 +72,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <!-- Estilos compilados (Tailwind CLI + CSS propio). Recompilar: ver tailwind/README.md -->
-  <link rel="stylesheet" href="./assets/styles.css?v=18" />
+  <link rel="stylesheet" href="./assets/styles.css?v=19" />
 </head>
 <body class="font-sans">
 
@@ -553,8 +553,8 @@
             <li class="rs-fade flex items-baseline gap-5 py-5 border-b border-[#12100E]/10">
               <span class="font-serif italic text-2xl text-[#C6A87C] w-8">i.</span>
               <div>
-                <p class="font-semibold text-sm" data-i18n="rs.p1Title">Depósito requerido</p>
-                <p class="text-sm text-[#12100E]/65 mt-1" data-i18n="rs.p1Text">Tu cita se confirma con un depósito que se descuenta del total del servicio.</p>
+                <p class="font-semibold text-sm" data-i18n="rs.p1Title">Pago al terminar el servicio</p>
+                <p class="text-sm text-[#12100E]/65 mt-1" data-i18n="rs.p1Text">No pedimos depósito: pagas al terminar, cuando ya ves tu resultado.</p>
               </div>
             </li>
             <li class="rs-fade flex items-baseline gap-5 py-5 border-b border-[#12100E]/10">
@@ -568,7 +568,7 @@
               <span class="font-serif italic text-2xl text-[#C6A87C] w-8">iii.</span>
               <div>
                 <p class="font-semibold text-sm" data-i18n="rs.p3Title">Cancelación con 48h</p>
-                <p class="text-sm text-[#12100E]/65 mt-1" data-i18n="rs.p3Text">Avísanos con 48 horas de anticipación para conservar tu depósito.</p>
+                <p class="text-sm text-[#12100E]/65 mt-1" data-i18n="rs.p3Text">Si no puedes venir, avísanos con 48 horas de anticipación para darle tu espacio a otra clienta.</p>
               </div>
             </li>
           </ul>
@@ -591,7 +591,11 @@
           <div id="bkFields">
           <div class="mt-8">
             <p class="block text-[11px] tracking-luxe uppercase text-[#F9F6F0]/60 mb-3" data-i18n="rs.step2">2 · Elige el día</p>
-            <div id="bkDays" class="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x" role="radiogroup" aria-label="Día"></div>
+            <div class="flex items-center gap-2">
+              <button type="button" id="bkDaysPrev" class="shrink-0 w-11 h-11 rounded-full border border-[#F9F6F0]/15 text-[#C6A87C] text-lg hover:border-[#C6A87C] disabled:opacity-25 disabled:cursor-not-allowed transition-colors" aria-label="Días anteriores">‹</button>
+              <div id="bkDays" data-lenis-prevent class="flex-1 min-w-0 flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x no-scrollbar cursor-grab" role="radiogroup" aria-label="Día"></div>
+              <button type="button" id="bkDaysNext" class="shrink-0 w-11 h-11 rounded-full border border-[#F9F6F0]/15 text-[#C6A87C] text-lg hover:border-[#C6A87C] disabled:opacity-25 disabled:cursor-not-allowed transition-colors" aria-label="Más días">›</button>
+            </div>
           </div>
 
           <div class="mt-6">
@@ -840,12 +844,12 @@
         "rs.kicker": "Concierge de citas",
         "rs.title": "Reserva tu <span class=\"italic text-[#A88B5F]\">Experiencia</span>",
         "rs.hoursLabel": "Horario",
-        "rs.p1Title": "Depósito requerido",
-        "rs.p1Text": "Tu cita se confirma con un depósito que se descuenta del total del servicio.",
+        "rs.p1Title": "Pago al terminar el servicio",
+        "rs.p1Text": "No pedimos depósito: pagas al terminar, cuando ya ves tu resultado.",
         "rs.p2Title": "Tolerancia de 15 min",
         "rs.p2Text": "Pasado ese tiempo, el servicio puede reducirse o reprogramarse.",
         "rs.p3Title": "Cancelación con 48h",
-        "rs.p3Text": "Avísanos con 48 horas de anticipación para conservar tu depósito.",
+        "rs.p3Text": "Si no puedes venir, avísanos con 48 horas de anticipación para darle tu espacio a otra clienta.",
         "rs.formTitle": "Agenda en <span class=\"italic text-[#C6A87C]\">cuatro pasos</span>",
         "rs.step1": "1 · Servicio",
         "rs.svcMakeup": "Maquillaje &amp; Peinado",
@@ -968,12 +972,12 @@
         "rs.kicker": "Booking concierge",
         "rs.title": "Book your <span class=\"italic text-[#A88B5F]\">Experience</span>",
         "rs.hoursLabel": "Hours",
-        "rs.p1Title": "Deposit required",
-        "rs.p1Text": "Your appointment is confirmed with a deposit that is applied to your service total.",
+        "rs.p1Title": "Pay after your service",
+        "rs.p1Text": "No deposit needed: you pay once your service is done and you see your result.",
         "rs.p2Title": "15-minute grace period",
         "rs.p2Text": "After that, your service may be shortened or rescheduled.",
         "rs.p3Title": "48-hour cancellation",
-        "rs.p3Text": "Let us know 48 hours in advance to keep your deposit.",
+        "rs.p3Text": "If you can’t make it, please let us know 48 hours in advance so we can offer your spot to another client.",
         "rs.formTitle": "Book in <span class=\"italic text-[#C6A87C]\">four steps</span>",
         "rs.step1": "1 · Service",
         "rs.svcMakeup": "Makeup &amp; Hair",
@@ -1736,7 +1740,47 @@
         });
         // Mostrar el día elegido dentro de la tira (sin mover la página)
         if (activeBtn) daysEl.scrollLeft = Math.max(0, activeBtn.offsetLeft - daysEl.offsetLeft - 8);
+        updateDayArrows();
       }
+
+      // Tira de días: flechas, rueda del ratón y arrastre (en PC no hay deslizamiento táctil)
+      const daysPrev = document.getElementById('bkDaysPrev');
+      const daysNext = document.getElementById('bkDaysNext');
+      function updateDayArrows() {
+        daysPrev.disabled = daysEl.scrollLeft <= 2;
+        daysNext.disabled = daysEl.scrollLeft + daysEl.clientWidth >= daysEl.scrollWidth - 2;
+      }
+      function scrollDays(dir) {
+        daysEl.scrollBy({ left: dir * Math.max(160, daysEl.clientWidth * 0.8), behavior: 'smooth' });
+      }
+      daysPrev.addEventListener('click', function () { scrollDays(-1); });
+      daysNext.addEventListener('click', function () { scrollDays(1); });
+      daysEl.addEventListener('scroll', updateDayArrows, { passive: true });
+      window.addEventListener('resize', updateDayArrows);
+      daysEl.addEventListener('wheel', function (e) {
+        if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+        const atStart = daysEl.scrollLeft <= 0 && e.deltaY < 0;
+        const atEnd = daysEl.scrollLeft + daysEl.clientWidth >= daysEl.scrollWidth - 1 && e.deltaY > 0;
+        if (atStart || atEnd) return;
+        e.preventDefault();
+        daysEl.scrollLeft += e.deltaY;
+      }, { passive: false });
+      let dragX = null, dragStart = 0, dragMoved = false;
+      daysEl.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse') return;
+        dragX = e.clientX; dragStart = daysEl.scrollLeft; dragMoved = false;
+      });
+      window.addEventListener('pointermove', function (e) {
+        if (dragX === null) return;
+        const dx = e.clientX - dragX;
+        if (Math.abs(dx) > 5) dragMoved = true;
+        if (dragMoved) daysEl.scrollLeft = dragStart - dx;
+      });
+      window.addEventListener('pointerup', function () { dragX = null; });
+      // Si fue un arrastre, no cuenta como clic sobre un día
+      daysEl.addEventListener('click', function (e) {
+        if (dragMoved) { e.stopPropagation(); e.preventDefault(); dragMoved = false; }
+      }, true);
 
       function renderSlots() {
         const serviceId = bkServiceId();
