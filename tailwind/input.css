@@ -160,9 +160,13 @@ body {
 }
 
 /* Cursor de lujo: punto dorado + anillo que lo sigue (solo ratón) */
-.cursor-dot, .cursor-ring { position: fixed; top: 0; left: 0; z-index: 90; pointer-events: none; border-radius: 9999px; opacity: 0; transition: opacity 0.3s ease; }
+.cursor-dot, .cursor-ring { position: fixed; top: 0; left: 0; z-index: 110; pointer-events: none; border-radius: 9999px; opacity: 0; transition: opacity 0.3s ease; }
 .cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: #C6A87C; box-shadow: 0 0 10px rgba(198,168,124,0.8); }
 .cursor-ring { width: 38px; height: 38px; margin: -19px 0 0 -19px; border: 1px solid rgba(198,168,124,0.6); transition: opacity 0.3s ease, width 0.35s cubic-bezier(0.22,1,0.36,1), height 0.35s cubic-bezier(0.22,1,0.36,1), margin 0.35s cubic-bezier(0.22,1,0.36,1), background-color 0.35s ease, border-color 0.35s ease; }
 .cursor-on .cursor-dot, .cursor-on .cursor-ring { opacity: 1; }
 .cursor-ring.is-hover { width: 64px; height: 64px; margin: -32px 0 0 -32px; background: rgba(198,168,124,0.12); border-color: rgba(198,168,124,0.9); }
 .cursor-ring.is-down { width: 28px; height: 28px; margin: -14px 0 0 -14px; }
+/* El punto dorado reemplaza la flecha del sistema (los campos de texto conservan su cursor) */
+html.cursor-custom, html.cursor-custom * { cursor: none !important; }
+html.cursor-custom input, html.cursor-custom textarea, html.cursor-custom select { cursor: text !important; }
+html.cursor-custom select { cursor: pointer !important; }
