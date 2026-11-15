@@ -1278,6 +1278,7 @@
 
       // 50% → 100%: el video se expande a pantalla completa
         .to('#videoFrame', { scale: 1, borderRadius: '0rem', duration: 0.5 }, 0.5)
+        .to('#videoFrame', { boxShadow: '0 0 0 0px rgba(198, 168, 124, 0), 0 0 0 0px rgba(27, 24, 21, 0), 0 0 0 0px rgba(198, 168, 124, 0), 0 0 0px 0px rgba(198, 168, 124, 0), 0 0px 0px 0px rgba(0, 0, 0, 0)', duration: 0.4 }, 0.55)
         .to('#videoFrame', { boxShadow: '0 0 0 0px rgba(198, 168, 124, 0), 0 0 0 0px rgba(198, 168, 124, 0), 0 0px 0px 0px rgba(0, 0, 0, 0)', duration: 0.4 }, 0.55)
         .to('#titleBlock', { opacity: 0, filter: 'blur(8px)', duration: 0.2 }, 0.5)
         .to('#titleTop', { yPercent: -60, duration: 0.3 }, 0.5)
